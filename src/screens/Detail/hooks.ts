@@ -14,10 +14,17 @@ type Result = {
     slot: number;
   }>;
   forms: Array<BasicInformation>;
+  stats: Array<{
+    base_stat: number;
+    effort: number;
+    stat: BasicInformation;
+  }>;
   moves: Array<{
     move: BasicInformation;
   }>;
 };
+
+export { Result as DetailResult };
 
 type BasicInformation = {
   name: string;
@@ -27,7 +34,7 @@ type BasicInformation = {
 const getPokemon = async (id: string) => fetchAPI(`pokemon/${id}`);
 
 export function DetailPokemon(id: string) {
-  let { data: pokemonQuery, isLoading, error } = useQuery<Result, any >('', () =>
+  let { data: pokemonQuery, isLoading, error } = useQuery<Result, any>('', () =>
     getPokemon(id),
   );
 
@@ -38,6 +45,6 @@ export function DetailPokemon(id: string) {
   return {
     detail,
     isLoading,
-    error
+    error,
   };
 }
