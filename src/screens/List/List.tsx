@@ -4,9 +4,9 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function List() {
   return (
     <View style={styles.container}>
-    <Text>List screen</Text>
-  </View>
-  )
+      <Text>List screen</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
