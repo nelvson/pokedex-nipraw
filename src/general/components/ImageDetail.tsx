@@ -22,13 +22,12 @@ export function ImageDetail(props: ImageDetailProps) {
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
     borderWidth: 1,
     borderRadius: 10,
     alignItems: 'center',
+    height: 200
   },
   image: {
-    flex: 1,
     width: 100,
     height: 100,
   },

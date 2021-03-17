@@ -1,29 +1,30 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ViewStyle, StyleProp } from 'react-native';
 
 export type TagProps = {
   text: string;
-
-  textColorProps?: string;
+  customColor?: string;
+  withDot?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 export function Tag(props: TagProps) {
-  let {
-    text,
-
-    textColorProps,
-  } = props;
-
-  let wrapper = {
-    borderWidth: 1,
-    borderRadius: 16,
-    height: 24,
-  };
+  let { text, customColor, withDot, containerStyle } = props;
 
   return (
-    <View style={wrapper}>
+    <View
+      style={[styles.wrapper, { borderColor: customColor }, containerStyle]}
+    >
       <View style={styles.root}>
-        <Text style={{ color: textColorProps || '#0f0f0f' }}>{text}</Text>
+        {withDot && (
+          <View
+            style={[
+              styles.withDot,
+              { backgroundColor: customColor, borderColor: customColor },
+            ]}
+          />
+        )}
+        <Text style={{ color: '#0f0f0f' }}>{text}</Text>
       </View>
     </View>
   );
@@ -37,5 +38,17 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingHorizontal: 8,
     paddingVertical: 4,
+  },
+  wrapper: {
+    borderWidth: 1,
+    borderRadius: 16,
+    height: 24,
+  },
+  withDot: {
+    width: 8,
+    height: 8,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginRight: 8,
   },
 });

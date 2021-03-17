@@ -14,8 +14,9 @@ const fetchAPI = async (path: string, request: Request = {}) => {
     body: body && JSON.stringify(body),
   });
 
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
+  if (!response.ok || response.status % 100 === 4) {
+    // TODO: properly handle status response 4xx
+    throw new Error(response.toString());
   }
   if (response.headers.get('Content-Type')?.includes('application/json')) {
     return response.json();

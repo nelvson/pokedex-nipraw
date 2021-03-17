@@ -1,6 +1,6 @@
 import { RouteProps } from 'react-router-dom';
 
-import { Landing, List } from '../screens';
+import { Landing, List, Detail } from '../screens';
 
 const commonRoutes = [
   {
@@ -12,6 +12,11 @@ const commonRoutes = [
     path: '/list',
     exact: true,
     component: List,
+  },
+  {
+    path: '/detail/:id',
+    exact: true,
+    component: Detail,
   },
 ];
 
