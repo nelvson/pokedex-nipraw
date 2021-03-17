@@ -10,4 +10,9 @@ export const PROGRESS_BAR = {
   TEXT: '#fff',
 };
 
+export const TAG = {
+  types: '#66cdaa',
+  move: '#468499',
+};
+
 export type ProgressBarStat = keyof typeof PROGRESS_BAR.STAT;
