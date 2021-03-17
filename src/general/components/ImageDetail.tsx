@@ -1,21 +1,23 @@
 import React from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 
+import { IMAGE_URL } from '../constants/api';
+
 export type ImageDetailProps = {
-  uri: string;
+  index: string;
   name: string;
-  weight: number;
+  weight?: number;
 };
 
 export function ImageDetail(props: ImageDetailProps) {
-  let { name, weight, uri } = props;
-
+  let { name, weight, index } = props;
+  const uri =`${IMAGE_URL}` + index + '.png' 
   return (
     <View style={styles.root}>
       <Image source={{ uri }} style={styles.image} />
       <Text>Name: {name}</Text>
 
-      <Text>weight: {weight}</Text>
+      {weight && <Text>weight: {weight}</Text>}
     </View>
   );
 }

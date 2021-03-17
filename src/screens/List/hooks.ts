@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 
+import { slicePokemonUrlToId } from '../../general/helpers';
 import fetchAPI from '../../general/helpers/fetchAPI';
 
 type Result<T> = {
@@ -13,22 +14,36 @@ type PokemonQuery = {
   url: string;
 };
 
-const getPokemon = async () => fetchAPI('pokemon?limit=5&offset=10&order=1');
+const getPokemon = async (props: Props) => {
+  let { rowsPerPage, page } = props;
+  return fetchAPI(`pokemon?limit=${rowsPerPage}&offset=${page * rowsPerPage}`);
+};
 
-export function Pokemon() {
-  let { data: pokemonQuery, isLoading } = useQuery<Result<PokemonQuery>>(
-    'results',
-    getPokemon,
-  );
+type Props = {
+  rowsPerPage: 5 | 10 | 20;
+  page: number;
+};
+
+export function PokemonList(props: Props) {
+  let { data: pokemonQuery, isLoading, error } = useQuery<
+    Result<PokemonQuery>,
+    string
+  >('results', () => getPokemon(props));
 
   let list = useMemo(() => {
-    return pokemonQuery?.results.map((datum) => {
-      return datum;
-    });
+    return (
+      pokemonQuery?.results.map(({ name, url }) => {
+        return {
+          name,
+          id: slicePokemonUrlToId(url),
+        };
+      }) || []
+    );
   }, [pokemonQuery]);
 
   return {
     list,
     isLoading,
+    error,
   };
 }
