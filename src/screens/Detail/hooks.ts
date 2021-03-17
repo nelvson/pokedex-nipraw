@@ -22,6 +22,10 @@ type Result = {
   moves: Array<{
     move: BasicInformation;
   }>;
+  types: Array<{
+    slot: number;
+    type: BasicInformation;
+  }>;
 };
 
 export { Result as DetailResult };

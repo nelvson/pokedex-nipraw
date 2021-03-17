@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { useParams } from 'react-router-dom';
 
-import { DetailPokemon, DetailResult } from './hooks';
-import { Tag } from '../../general/core-ui';
-import { ImageDetail, ProgressBar } from '../../general/components';
+import {
+  ImageDetail,
+  ProgressBar,
+  MoveTag,
+  TypeTag,
+} from '../../general/components';
 import { IMAGE_URL } from '../../general/constants/api';
 import { PROGRESS_BAR, ProgressBarStat } from '../../general/constants/colors';
+import { fontSizes } from '../../general/constants/font';
+
+import { DetailPokemon, DetailResult } from './hooks';
 
 type DetailRoute = {
   id: string;
@@ -28,14 +34,21 @@ export default function Detail() {
   }
 
   if ((isLoading && !error) || !detail) {
-    console.log(isLoading, detail, queryDetail);
     return <ActivityIndicator />;
   }
 
   return (
     <View style={styles.root}>
       <View style={styles.tagDetail}>
-        <Tag text="asd" />
+        <Text style={styles.textHeader}>Type</Text>
+        {detail.types.map((datum) => (
+          <TypeTag text={datum.type.name} />
+        ))}
+
+        <Text style={styles.textHeader}>Type</Text>
+        {detail.moves.map((datum) => (
+          <MoveTag text={datum.move.name} />
+        ))}
       </View>
       <View style={styles.pokemonDetail}>
         <ImageDetail
@@ -44,19 +57,17 @@ export default function Detail() {
           weight={detail.weight}
         />
 
-        {detail &&
-          detail.stats.map((datum) => {
-            let barColor =
-              PROGRESS_BAR.STAT[datum.stat.name as ProgressBarStat];
-            return (
-              <ProgressBar
-                text={datum.stat.name}
-                progressValue={datum.base_stat / 100}
-                withAnimation
-                barColor={barColor}
-              />
-            );
-          })}
+        {detail.stats.map(({ base_stat, stat: { name } }) => {
+          let barColor = PROGRESS_BAR.STAT[name as ProgressBarStat];
+          return (
+            <ProgressBar
+              text={name}
+              progressValue={base_stat / 100}
+              withAnimation
+              barColor={barColor}
+            />
+          );
+        })}
       </View>
     </View>
   );
@@ -71,8 +82,13 @@ const styles = StyleSheet.create({
   },
   tagDetail: {
     flex: 3,
+    paddingHorizontal: 20,
   },
   pokemonDetail: {
     flex: 1,
+    paddingHorizontal: 20,
+  },
+  textHeader: {
+    fontSize: fontSizes.l,
   },
 });
