@@ -8,7 +8,6 @@ import {
   MoveTag,
   TypeTag,
 } from '../../general/components';
-import { IMAGE_URL } from '../../general/constants/api';
 import { PROGRESS_BAR, ProgressBarStat } from '../../general/constants/colors';
 import { fontSizes } from '../../general/constants/font';
 
@@ -52,7 +51,7 @@ export default function Detail() {
       </View>
       <View style={styles.pokemonDetail}>
         <ImageDetail
-          uri={`${IMAGE_URL}` + id + '.png'}
+          index={id}
           name={detail.name}
           weight={detail.weight}
         />
