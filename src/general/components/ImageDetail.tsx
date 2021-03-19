@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 
 import { IMAGE_URL } from '../constants/api';
 
@@ -7,13 +14,14 @@ export type ImageDetailProps = {
   index: string;
   name: string;
   weight?: number;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 export function ImageDetail(props: ImageDetailProps) {
-  let { name, weight, index } = props;
-  const uri =`${IMAGE_URL}` + index + '.png' 
+  let { name, weight, index, containerStyle } = props;
+  const uri = `${IMAGE_URL}` + index + '.png';
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, containerStyle]}>
       <Image source={{ uri }} style={styles.image} />
       <Text>Name: {name}</Text>
 
@@ -27,7 +35,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     alignItems: 'center',
-    height: 200
+    height: 200,
   },
   image: {
     width: 100,
