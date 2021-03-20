@@ -4,7 +4,7 @@ import { useLocation } from 'react-router';
 import { TextField } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 
-import { BasicInformation, DetailResult } from '../Detail/hooks';
+import { BasicInformation } from '../Detail/hooks';
 import { DetailPokemon } from './hooks';
 import { ImageDetail, MoveTag, TypeTag } from '../../general/components';
 
@@ -43,17 +43,18 @@ const TextEntry = (props: {
   );
 };
 
+const EmptyTagSpace = () => <View style={{ height: 24 }} />;
+
 export default function Compare() {
   let locationState = useLocation().state as Maybe<{
     id: string;
   }>;
 
   let [arrayIds, setArrayIds] = useState<Array<string>>(['', '', '']);
-  let [detailState, setDetail] = useState<Array<DetailResult>>([]);
-  let [isMounted, setMounted] = useState(false);
   let { detail: detailQuery } = DetailPokemon(arrayIds);
 
   let mergedTypes: Array<{ slot: number; type: BasicInformation }> = [];
+  let mergedMoves: Array<{ move: BasicInformation }> = [];
 
   useEffect(() => {
     function mountState() {
@@ -63,34 +64,50 @@ export default function Compare() {
     }
 
     mountState();
-    setMounted(true);
   }, [locationState]);
 
   if (detailQuery) {
+    // merging array of types & moves
     if (detailQuery[0].abilities !== undefined) {
-      let { types } = detailQuery[0];
+      let { types, moves } = detailQuery[0];
       types.forEach((datum) => {
         if (
           mergedTypes.findIndex((type) => type.type.url === datum.type.url) ===
           -1
         ) {
           mergedTypes.push(datum);
+        }
+      });
+      moves.forEach((datum) => {
+        if (
+          mergedMoves.findIndex((type) => type.move.url === datum.move.url) ===
+          -1
+        ) {
+          mergedMoves.push(datum);
         }
       });
     }
     if (detailQuery[1].abilities !== undefined) {
-      let { types } = detailQuery[1];
+      let { types, moves } = detailQuery[1];
       types.forEach((datum) => {
         if (
           mergedTypes.findIndex((type) => type.type.url === datum.type.url) ===
           -1
         ) {
           mergedTypes.push(datum);
+        }
+      });
+      moves.forEach((datum) => {
+        if (
+          mergedMoves.findIndex((type) => type.move.url === datum.move.url) ===
+          -1
+        ) {
+          mergedMoves.push(datum);
         }
       });
     }
     if (detailQuery[2].abilities !== undefined) {
-      let { types } = detailQuery[2];
+      let { types, moves } = detailQuery[2];
       types.forEach((datum) => {
         if (
           mergedTypes.findIndex((type) => type.type.url === datum.type.url) ===
@@ -99,9 +116,17 @@ export default function Compare() {
           mergedTypes.push(datum);
         }
       });
+      moves.forEach((datum) => {
+        if (
+          mergedMoves.findIndex((type) => type.move.url === datum.move.url) ===
+          -1
+        ) {
+          mergedMoves.push(datum);
+        }
+      });
     }
+    // end of merging array of types & moves
   }
-  console.log(mergedTypes);
   return (
     <View style={styles.root}>
       <View style={styles.rowPokemon}>
@@ -123,18 +148,25 @@ export default function Compare() {
                     detailQueryType.type.url === datum.type.url,
                 ) === -1
               ) {
-                return <View style={{height: 24}} />;
-                //
+                return <EmptyTagSpace />;
               } else {
                 return <TypeTag text={datum.type.name} />;
-                //
               }
             })}
 
             <Text>Move:</Text>
-            {detailQuery[0].moves.map((datum) => (
-              <MoveTag text={datum.move.name} />
-            ))}
+            {mergedMoves.map((datum) => {
+              if (
+                detailQuery![0].moves.findIndex(
+                  (detailQueryMove) =>
+                    detailQueryMove.move.url === datum.move.url,
+                ) === -1
+              ) {
+                return <EmptyTagSpace />;
+              } else {
+                return <MoveTag text={datum.move.name} />;
+              }
+            })}
           </>
         )}
       </View>
@@ -157,18 +189,26 @@ export default function Compare() {
                     detailQueryType.type.url === datum.type.url,
                 ) === -1
               ) {
-                return <View style={{height: 24}} />;
+                return <EmptyTagSpace />;
                 //
               } else {
                 return <TypeTag text={datum.type.name} />;
-                //
               }
             })}
 
             <Text>Move:</Text>
-            {detailQuery[1].moves.map((datum) => (
-              <MoveTag text={datum.move.name} />
-            ))}
+            {mergedMoves.map((datum) => {
+              if (
+                detailQuery![1].moves.findIndex(
+                  (detailQueryMove) =>
+                    detailQueryMove.move.url === datum.move.url,
+                ) === -1
+              ) {
+                return <EmptyTagSpace />;
+              } else {
+                return <MoveTag text={datum.move.name} />;
+              }
+            })}
           </>
         )}
       </View>
@@ -191,18 +231,25 @@ export default function Compare() {
                     detailQueryType.type.url === datum.type.url,
                 ) === -1
               ) {
-                return <View style={{height: 24}} />;
-                //
+                return <EmptyTagSpace />;
               } else {
                 return <TypeTag text={datum.type.name} />;
-                //
               }
             })}
 
             <Text>Move:</Text>
-            {detailQuery[2].moves.map((datum) => (
-              <MoveTag text={datum.move.name} />
-            ))}
+            {mergedMoves.map((datum) => {
+              if (
+                detailQuery![2].moves.findIndex(
+                  (detailQueryMove) =>
+                    detailQueryMove.move.url === datum.move.url,
+                ) === -1
+              ) {
+                return <EmptyTagSpace />;
+              } else {
+                return <MoveTag text={datum.move.name} />;
+              }
+            })}
           </>
         )}
       </View>
@@ -221,18 +268,3 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-
-//  Promise.all(
-//    arrayIds.map(async (arrayId, index) => {
-//      if (arrayId !== '') {
-//        let { detail: detailQuery, error, isLoading } = DetailPokemon(arrayId);
-//        if (detailQuery && !isLoading && !error) {
-//          let newArr = [...detail.slice(0, index)];
-//          newArr.push(detailQuery);
-//          newArr.push(...detail.slice(index + 1, 3));
-//
-//          setDetail(newArr);
-//        }
-//      }
-//    }),
-//  );
