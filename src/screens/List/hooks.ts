@@ -11,6 +11,8 @@ type Result<T> = {
   results: Array<T>;
 };
 
+export { Result as ListResult };
+
 type PokemonQuery = {
   name: string;
   url: string;
@@ -21,7 +23,7 @@ const getPokemon = async (props: Props) => {
   return fetchAPI(`pokemon?limit=${rowsPerPage}&offset=${page * rowsPerPage}`);
 };
 
-export type RowsPerPage =  | 10 | 20 | 50;
+export type RowsPerPage = 10 | 20 | 50;
 
 type Props = {
   rowsPerPage: RowsPerPage;
