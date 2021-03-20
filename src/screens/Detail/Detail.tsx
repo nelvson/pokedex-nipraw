@@ -61,14 +61,14 @@ export default function Detail() {
               setModalBaseProps({
                 id: slicePokemonUrlToId(datum.type.url, 31),
                 name: datum.type.name,
-                type: 'TAG',
+                type: 'TYPE',
               });
             }}
             text={datum.type.name}
           />
         ))}
 
-        <Text style={styles.textHeader}>Type</Text>
+        <Text style={styles.textHeader}>Detail</Text>
         {detail.moves.map((datum) => (
           <MoveTag
             text={datum.move.name}
@@ -77,7 +77,7 @@ export default function Detail() {
               setModalBaseProps({
                 id: slicePokemonUrlToId(datum.move.url, 31),
                 name: datum.move.name,
-                type: 'TYPE',
+                type: 'MOVE',
               });
             }}
           />
