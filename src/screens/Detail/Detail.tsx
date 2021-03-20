@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { useParams } from 'react-router-dom';
+import { Button } from '@material-ui/core';
+import { useHistory, useParams } from 'react-router-dom';
 
 import {
   ImageDetail,
@@ -29,7 +30,7 @@ export default function Detail() {
     name: string;
     type: string;
   }>({ id: '', name: '', type: '' });
-
+  let history = useHistory();
   useEffect(() => {
     if (queryDetail && !isLoading) {
       setDetail(queryDetail);
@@ -84,7 +85,11 @@ export default function Detail() {
         ))}
       </View>
       <View style={styles.pokemonDetail}>
-        <ImageDetail index={id} name={detail.name} weight={detail.weight} />
+        <ImageDetail
+          index={detail.id}
+          name={detail.name}
+          weight={detail.weight}
+        />
 
         {detail.stats.map(({ base_stat, stat: { name } }) => {
           let barColor = PROGRESS_BAR.STAT[name as ProgressBarStat];
@@ -97,6 +102,20 @@ export default function Detail() {
             />
           );
         })}
+
+        <Button
+          color="primary"
+          onClick={() => {
+            history.push({
+              pathname: '/compare',
+              state: {
+                id,
+              },
+            });
+          }}
+        >
+          Compare this pokemon
+        </Button>
       </View>
     </View>
   );
