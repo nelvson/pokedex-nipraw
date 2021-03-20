@@ -5,6 +5,7 @@ import fetchAPI from '../../general/helpers/fetchAPI';
 
 export type DetailResult = {
   name: string;
+  id: string;
   weight: number;
   order: number;
   height: number;
