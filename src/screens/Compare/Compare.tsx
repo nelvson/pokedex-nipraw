@@ -6,7 +6,8 @@ import { Cancel } from '@material-ui/icons';
 
 import { BasicInformation } from '../Detail/hooks';
 import { DetailPokemon } from './hooks';
-import { ImageDetail, MoveTag, TypeTag } from '../../general/components';
+import { ImageDetail, MoveTag, ProgressBar, TypeTag } from '../../general/components';
+import { ProgressBarStat, PROGRESS_BAR } from '../../general/constants/colors';
 
 const TextEntry = (props: {
   arr: Array<string>;
@@ -59,7 +60,7 @@ export default function Compare() {
   useEffect(() => {
     function mountState() {
       if (locationState) {
-        setArrayIds([locationState.id]);
+        setArrayIds([locationState.id, '', '']);
       }
     }
 
@@ -140,6 +141,18 @@ export default function Compare() {
               weight={detailQuery[0].weight}
             />
 
+            {detailQuery![0].stats.map(({ base_stat, stat: { name } }) => {
+              let barColor = PROGRESS_BAR.STAT[name as ProgressBarStat];
+              return (
+                <ProgressBar
+                  text={name}
+                  progressValue={base_stat / 200}
+                  withAnimation
+                  barColor={barColor}
+                />
+              );
+            })}
+
             <Text>Type:</Text>
             {mergedTypes.map((datum) => {
               if (
@@ -180,6 +193,18 @@ export default function Compare() {
               name={detailQuery[1].name}
               weight={detailQuery[1].weight}
             />
+
+            {detailQuery![1].stats.map(({ base_stat, stat: { name } }) => {
+              let barColor = PROGRESS_BAR.STAT[name as ProgressBarStat];
+              return (
+                <ProgressBar
+                  text={name}
+                  progressValue={base_stat / 200}
+                  withAnimation
+                  barColor={barColor}
+                />
+              );
+            })}
 
             <Text>Type:</Text>
             {mergedTypes.map((datum) => {
@@ -223,6 +248,18 @@ export default function Compare() {
               weight={detailQuery[2].weight}
             />
 
+            {detailQuery![2].stats.map(({ base_stat, stat: { name } }) => {
+              let barColor = PROGRESS_BAR.STAT[name as ProgressBarStat];
+              return (
+                <ProgressBar
+                  text={name}
+                  progressValue={base_stat / 200}
+                  withAnimation
+                  barColor={barColor}
+                />
+              );
+            })}
+
             <Text>Type:</Text>
             {mergedTypes.map((datum) => {
               if (
@@ -253,6 +290,7 @@ export default function Compare() {
           </>
         )}
       </View>
+
     </View>
   );
 }
