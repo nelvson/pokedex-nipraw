@@ -3,6 +3,12 @@ import { useQuery } from 'react-query';
 
 import fetchAPI from '../../general/helpers/fetchAPI';
 
+export type PokemonStats = Array<{
+  base_stat: number;
+  effort: number;
+  stat: BasicInformation;
+}>;
+
 export type DetailResult = {
   name: string;
   id: string;
@@ -15,11 +21,7 @@ export type DetailResult = {
     slot: number;
   }>;
   forms: Array<BasicInformation>;
-  stats: Array<{
-    base_stat: number;
-    effort: number;
-    stat: BasicInformation;
-  }>;
+  stats: PokemonStats;
   moves: Array<{
     move: BasicInformation;
   }>;

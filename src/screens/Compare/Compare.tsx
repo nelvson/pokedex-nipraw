@@ -4,9 +4,14 @@ import { useLocation } from 'react-router';
 import { TextField } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 
-import { BasicInformation } from '../Detail/hooks';
+import { BasicInformation, PokemonStats } from '../Detail/hooks';
 import { DetailPokemon } from './hooks';
-import { ImageDetail, MoveTag, ProgressBar, TypeTag } from '../../general/components';
+import {
+  ImageDetail,
+  MoveTag,
+  ProgressBar,
+  TypeTag,
+} from '../../general/components';
 import { ProgressBarStat, PROGRESS_BAR } from '../../general/constants/colors';
 
 const TextEntry = (props: {
@@ -263,7 +268,7 @@ export default function Compare() {
             <Text>Type:</Text>
             {mergedTypes.map((datum) => {
               if (
-                detailQuery![1].types.findIndex(
+                detailQuery![2].types.findIndex(
                   (detailQueryType) =>
                     detailQueryType.type.url === datum.type.url,
                 ) === -1
@@ -291,8 +296,115 @@ export default function Compare() {
         )}
       </View>
 
+      <View>
+        <Text>Win Fight Probability:</Text>
+        <Text>
+          ps: probability calculation: gede2an stats HP, attack, defense,
+          special attack/defense, speed :)
+        </Text>
+        <Text>
+          Couldn't get any reference on API nor anywhere else with a win rate prediction formula
+        </Text>
+
+        {detailQuery && detailQuery[0].abilities && detailQuery[1].abilities && (
+          <View style={styles.probWrapper}>
+            <Text>
+              {detailQuery[0].name} win Probability:{' '}
+              {
+                winProbability(detailQuery[0].stats, detailQuery[1].stats)
+                  .poke1Win
+              }{' '}
+              %
+            </Text>
+
+            <Text>
+              Draw Probability:{' '}
+              {winProbability(detailQuery[0].stats, detailQuery[1].stats).draw}{' '}
+              %
+            </Text>
+
+            <Text>
+              {detailQuery[1].name} win Probability:{' '}
+              {100 -
+                winProbability(detailQuery[0].stats, detailQuery[1].stats)
+                  .poke1Win}{' '}
+              %
+            </Text>
+          </View>
+        )}
+
+        {detailQuery && detailQuery[0].abilities && detailQuery[2].abilities && (
+          <View style={styles.probWrapper}>
+            <Text>
+              {detailQuery[0].name} win Probability:{' '}
+              {
+                winProbability(detailQuery[0].stats, detailQuery[2].stats)
+                  .poke1Win
+              }{' '}
+              %
+            </Text>
+
+            <Text>
+              Draw Probability:{' '}
+              {winProbability(detailQuery[0].stats, detailQuery[2].stats).draw}{' '}
+              %
+            </Text>
+
+            <Text>
+              {detailQuery[2].name} win Probability:{' '}
+              {100 -
+                winProbability(detailQuery[0].stats, detailQuery[2].stats)
+                  .poke1Win}{' '}
+              %
+            </Text>
+          </View>
+        )}
+
+        {detailQuery && detailQuery[1].abilities && detailQuery[2].abilities && (
+          <View style={styles.probWrapper}>
+            <Text>
+              {detailQuery[1].name} win Probability:{' '}
+              {
+                winProbability(detailQuery[1].stats, detailQuery[2].stats)
+                  .poke1Win
+              }{' '}
+              %
+            </Text>
+
+            <Text>
+              Draw Probability:{' '}
+              {winProbability(detailQuery[1].stats, detailQuery[2].stats).draw}{' '}
+              %
+            </Text>
+
+            <Text>
+              {detailQuery[2].name} win Probability:{' '}
+              {100 -
+                winProbability(detailQuery[1].stats, detailQuery[2].stats)
+                  .poke1Win}{' '}
+              %
+            </Text>
+          </View>
+        )}
+      </View>
     </View>
   );
+}
+
+function winProbability(poke1: PokemonStats, poke2: PokemonStats) {
+  let poke1Win = 0;
+  let draw = 0;
+
+  poke1.forEach((datum, idx) => {
+    let { base_stat } = datum;
+    if (base_stat > poke2[idx].base_stat) poke1Win++;
+    else if (base_stat === poke2[idx].base_stat) draw++;
+  });
+
+  return {
+    poke1Win: (poke1Win / 6) * 100,
+    draw: (draw / 6) * 100,
+  };
 }
 
 const styles = StyleSheet.create({
@@ -304,5 +416,8 @@ const styles = StyleSheet.create({
   },
   textEntry: {
     flexDirection: 'row',
+  },
+  probWrapper: {
+    paddingVertical: 20,
   },
 });
