@@ -1,6 +1,6 @@
 import { RouteProps } from 'react-router-dom';
 
-import { Landing, List, Detail, Filter } from '../screens';
+import { Landing, List, Detail, Filter, Compare } from '../screens';
 
 const commonRoutes = [
   {
@@ -22,6 +22,11 @@ const commonRoutes = [
     path: '/filter',
     exact: true,
     component: Filter,
+  },
+  {
+    path: '/compare',
+    exact: true,
+    component: Compare,
   },
 ];
 
