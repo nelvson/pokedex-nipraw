@@ -1,32 +1,42 @@
 import React from 'react';
-import { View, StyleSheet, Text, ViewStyle, StyleProp } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ViewStyle,
+  StyleProp,
+  TouchableOpacity,
+} from 'react-native';
 
 export type TagProps = {
   text: string;
   customColor?: string;
   withDot?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
+  onPress?: () => void;
 };
 
 export function Tag(props: TagProps) {
-  let { text, customColor, withDot, containerStyle } = props;
+  let { text, customColor, withDot, containerStyle, onPress } = props;
 
   return (
-    <View
-      style={[styles.wrapper, { borderColor: customColor }, containerStyle]}
-    >
-      <View style={styles.root}>
-        {withDot && (
-          <View
-            style={[
-              styles.withDot,
-              { backgroundColor: customColor, borderColor: customColor },
-            ]}
-          />
-        )}
-        <Text style={{ color: '#0f0f0f' }}>{text}</Text>
+    <TouchableOpacity onPress={onPress}>
+      <View
+        style={[styles.wrapper, { borderColor: customColor }, containerStyle]}
+      >
+        <View style={styles.root}>
+          {withDot && (
+            <View
+              style={[
+                styles.withDot,
+                { backgroundColor: customColor, borderColor: customColor },
+              ]}
+            />
+          )}
+          <Text style={{ color: '#0f0f0f' }}>{text}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

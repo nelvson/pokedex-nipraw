@@ -8,8 +8,10 @@ import {
   MoveTag,
   TypeTag,
 } from '../../general/components';
+import { ModalTag } from '../../general/components/ModalTag';
 import { PROGRESS_BAR, ProgressBarStat } from '../../general/constants/colors';
 import { fontSizes } from '../../general/constants/font';
+import { slicePokemonUrlToId } from '../../general/helpers';
 
 import { DetailPokemon, DetailResult } from './hooks';
 
@@ -20,7 +22,13 @@ type DetailRoute = {
 export default function Detail() {
   let { id } = useParams() as DetailRoute;
   let { isLoading, detail: queryDetail, error } = DetailPokemon(id);
-  const [detail, setDetail] = useState<Maybe<DetailResult>>(null);
+  let [detail, setDetail] = useState<Maybe<DetailResult>>(null);
+  let [modalOpen, setModalOpen] = useState(false);
+  let [modalBaseProps, setModalBaseProps] = useState<{
+    id: string;
+    name: string;
+    type: string;
+  }>({ id: '', name: '', type: '' });
 
   useEffect(() => {
     if (queryDetail && !isLoading) {
@@ -35,26 +43,48 @@ export default function Detail() {
   if ((isLoading && !error) || !detail) {
     return <ActivityIndicator />;
   }
-
   return (
     <View style={styles.root}>
+      <ModalTag
+        id={modalBaseProps.id}
+        type={modalBaseProps.type}
+        name={modalBaseProps.name}
+        onClose={() => setModalOpen(false)}
+        open={modalOpen}
+      />
       <View style={styles.tagDetail}>
         <Text style={styles.textHeader}>Type</Text>
         {detail.types.map((datum) => (
-          <TypeTag text={datum.type.name} />
+          <TypeTag
+            onPress={() => {
+              setModalOpen(true);
+              setModalBaseProps({
+                id: slicePokemonUrlToId(datum.type.url, 31),
+                name: datum.type.name,
+                type: 'TYPE',
+              });
+            }}
+            text={datum.type.name}
+          />
         ))}
 
-        <Text style={styles.textHeader}>Type</Text>
+        <Text style={styles.textHeader}>Detail</Text>
         {detail.moves.map((datum) => (
-          <MoveTag text={datum.move.name} />
+          <MoveTag
+            text={datum.move.name}
+            onPress={() => {
+              setModalOpen(true);
+              setModalBaseProps({
+                id: slicePokemonUrlToId(datum.move.url, 31),
+                name: datum.move.name,
+                type: 'MOVE',
+              });
+            }}
+          />
         ))}
       </View>
       <View style={styles.pokemonDetail}>
-        <ImageDetail
-          index={id}
-          name={detail.name}
-          weight={detail.weight}
-        />
+        <ImageDetail index={id} name={detail.name} weight={detail.weight} />
 
         {detail.stats.map(({ base_stat, stat: { name } }) => {
           let barColor = PROGRESS_BAR.STAT[name as ProgressBarStat];

@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 
 import fetchAPI from '../../general/helpers/fetchAPI';
 
-type Result = {
+export type DetailResult = {
   name: string;
   weight: number;
   order: number;
@@ -28,9 +28,7 @@ type Result = {
   }>;
 };
 
-export { Result as DetailResult };
-
-type BasicInformation = {
+export type BasicInformation = {
   name: string;
   url: string;
 };
@@ -38,8 +36,9 @@ type BasicInformation = {
 const getPokemon = async (id: string) => fetchAPI(`pokemon/${id}`);
 
 export function DetailPokemon(id: string) {
-  let { data: pokemonQuery, isLoading, error } = useQuery<Result, any>('', () =>
-    getPokemon(id),
+  let { data: pokemonQuery, isLoading, error } = useQuery<DetailResult, any>(
+    '',
+    () => getPokemon(id),
   );
 
   let detail = useMemo(() => {

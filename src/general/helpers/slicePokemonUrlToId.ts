@@ -1,3 +1,3 @@
-export function slicePokemonUrlToId(input: string) {
-  return input.slice(34, input.length - 1);
+export function slicePokemonUrlToId(input: string, length = 34) {
+  return input.slice(length, input.length - 1);
 }
